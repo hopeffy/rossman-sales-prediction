@@ -17,26 +17,49 @@ st.set_page_config(
 
 # --- Sabitler ve Yollar ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, '..', 'models', 'xgb_sales_model.joblib')
-DATA_PATH = os.path.join(BASE_DIR, '..', 'data', 'raw', 'store.csv')
+
+# Dosya yolları için alternatifleri kontrol et (Cloud vs Local uyumluluğu)
+possible_model_paths = [
+    os.path.join(BASE_DIR, '..', 'models', 'xgb_sales_model.joblib'),
+    os.path.join(BASE_DIR, 'models', 'xgb_sales_model.joblib'),
+    'models/xgb_sales_model.joblib'
+]
+
+possible_data_paths = [
+    os.path.join(BASE_DIR, '..', 'data', 'raw', 'store.csv'),
+    os.path.join(BASE_DIR, 'data', 'raw', 'store.csv'),
+    'data/raw/store.csv'
+]
+
+def find_file(possible_paths):
+    for path in possible_paths:
+        if os.path.exists(path):
+            return path
+    return None
+
+MODEL_PATH = find_file(possible_model_paths)
+DATA_PATH = find_file(possible_data_paths)
 
 # --- Yardımcı Fonksiyonlar ---
 @st.cache_resource
 def load_model():
-    if not os.path.exists(MODEL_PATH):
-        st.error(f"Model dosyası bulunamadı: {MODEL_PATH}")
+    if MODEL_PATH is None:
+        st.error("Model dosyası bulunamadı! Lütfen 'models/xgb_sales_model.joblib' dosyasının yüklendiğinden emin olun.")
         return None
     return joblib.load(MODEL_PATH)
 
 @st.cache_data
 def load_store_data():
-    if not os.path.exists(DATA_PATH):
-        st.error(f"Veri dosyası bulunamadı: {DATA_PATH}")
+    if DATA_PATH is None:
+        st.error("Veri dosyası bulunamadı! Lütfen 'data/raw/store.csv' dosyasının yüklendiğinden emin olun.")
         return None
     return pd.read_csv(DATA_PATH)
 
 def get_sample_store_id(store_df, store_type, assortment):
     """Seçilen özelliklere uygun bir örnek mağaza ID'si döndürür."""
+    if store_df is None:
+        return 1 # Fallback
+        
     subset = store_df[
         (store_df['StoreType'] == store_type) & 
         (store_df['Assortment'] == assortment)
