@@ -1,0 +1,2 @@
+Model loaded from: D:\ml-bootcamp\rossmann-sales-prediction\models\xgb_sales_model.joblib
+Feature Importance plot generated.

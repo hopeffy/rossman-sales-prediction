@@ -1,0 +1,19 @@
+Dataset Shape: (1017209, 18)
+
+Missing Values (%):
+Promo2SinceYear              49.943620
+Promo2SinceWeek              49.943620
+PromoInterval                49.943620
+CompetitionOpenSinceMonth    31.787764
+CompetitionOpenSinceYear     31.787764
+CompetitionDistance           0.259730
+
+Basic Statistics (Sales):
+count    1.017209e+06
+mean     5.773819e+03
+std      3.849926e+03
+min      0.000000e+00
+25%      3.727000e+03
+50%      5.744000e+03
+75%      7.856000e+03
+max      4.155100e+04
